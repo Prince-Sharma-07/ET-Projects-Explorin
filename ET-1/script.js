@@ -1,20 +1,13 @@
 const API_Url = "https://jsonplaceholder.typicode.com/users"
-
+let json = null
 
 fetch(API_Url).then((data)=>{
   return data.json()
-}).then(displayData)
+}).then(displayData).then((data) => {
+  json = data
+})
 
 function displayData(data){
-    const searchBox = document.getElementById('search-box')
-    const searchBoxValue = searchBox.value
-    let searchedData = null;
-
-    searchedData = data.filter((obj)=>{
-             obj.name.includes(searchBoxValue)
-    })    
-
-    // if(searchedData.length == 0){
 
     for(let i = 0; i<10; i++){
 
@@ -27,24 +20,49 @@ function displayData(data){
         
     }
 
-  // }
-  // else{
-
-  //   for(let i = 0; i<10; i++){
-  //       const user_id = searchedData[i].id
-  //       const img_url = `https://robohash.org/${user_id}`
-  //       document.getElementById(`img${i+1}`).setAttribute("src" , img_url)
-  //       document.getElementById(`name${i+1}`).textContent = searchedData[i].name
-  //       document.getElementById(`email${i+1}`).textContent = searchedData[i].email
-  //       document.getElementById(`username${i+1}`).textContent = searchedData[i].username
-  //   }
-
-  // }
-
-  console.log(searchedData)
-
+    return data
+  
 }
 
+document.getElementById('search-box').addEventListener('input' , (e)=>{
+  const searchBox = document.getElementById('search-box')
+  const searchBoxValue = searchBox.value
+  
+  let searchedData = null;
+  searchedData = json.filter(obj=>obj.name.toLowerCase().includes(searchBoxValue.toLowerCase()))    
+  var i;
+  
+  for(i = 0; i<searchedData.length; i++){
+      document.getElementById(`card${i+1}`).style = "display: flex"
+      const user_id = searchedData[i].id
+      const img_url = `https://robohash.org/${user_id}`
+      document.getElementById(`img${i+1}`).setAttribute("src" , img_url)
+      document.getElementById(`name${i+1}`).textContent = searchedData[i].name
+      document.getElementById(`email${i+1}`).textContent = searchedData[i].email
+      document.getElementById(`username${i+1}`).textContent = searchedData[i].username
+  }
+
+  while(i<10){
+    document.getElementById(`card${i+1}`).style = "display: none"
+    i++
+  }
+  
+  if(searchedData.length == 0){
+    document.getElementById('err').textContent = 'Oops Not Found' 
+  }
+  else{
+    document.getElementById('err').textContent = ''
+  }
+  
+})
+
+
+  
+
+
+
+
+//API DATA FORMAT - JSON OBJECT
 
 // let data = [
 //         {
